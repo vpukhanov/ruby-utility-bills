@@ -1,0 +1,5 @@
+last_name,first_name,patronymic,bill_type,total,paid
+Ivanov,Ivan,Ivanovich,phone,100,100
+Ivanov,Ivan,Ivanovich,electricity,250,200
+Doe,John,,rent,500,480
+Ming,Lee,Oswald,electricity,1000,999

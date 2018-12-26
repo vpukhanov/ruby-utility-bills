@@ -9,14 +9,29 @@
     </tr>
   </thead>
   <tbody>
-    <% @bills.each do |bill| %>
-      <tr class="<%= 'row-disabled' if bill.remaining.zero? %>">
-        <td><%= bill.type %></td>
-        <td>$<%= bill.remaining %></td>
-        <td>$<%= bill.total %></td>
+    <% @bills.each do |row| %>
+      <tr class="<%= 'row-disabled' if row['bill'].remaining.zero? %>">
+        <td><%= row['bill'].type %></td>
+        <td>$<%= row['bill'].remaining %></td>
+        <td>$<%= row['bill'].total %></td>
+        <td>
+          <% unless row['bill'].remaining.zero? %>
+            <a class="btn btn-sm btn-warning"
+              href="/bills/<%= @payer.to_s %>/<%= row['original_index'] %>/pay">
+              <span class="oi oi-dollar" aria-hidden="true"></span>
+            </a>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
+    <tr>
+      <th class="text-right">Total</th>
+      <th>$<%= @payer.remaining_debt %></th>
+      <th>$<%= @payer.total_debt %></th>
+    </tr>
+  <tfoot>
+  </tfoot>
 </table>
 <div class="container-offset">
   <a class="btn btn-primary" href="/bills/<%= @payer.to_s %>/new">

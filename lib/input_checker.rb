@@ -13,6 +13,14 @@ module InputChecker
     end
   end
 
+  def to_integer(str)
+    begin
+      Integer(str)
+    rescue ArgumentError, TypeError
+      nil
+    end
+  end
+
   def to_bill_type(str)
     begin
       BillTypes.from_string(str)
@@ -40,6 +48,16 @@ module InputChecker
     errors.append('Paid ammount should be <= total ammount') if params['paid'] > params['total']
     params['bill_type'] = to_bill_type(params['bill_type'])
     errors.append('Selected bill type is unknown') if params['bill_type'].nil?
+    errors
+  end
+
+  def validate_payment(params, bill)
+    errors = []
+    params['to_pay'] = to_float(params['to_pay'])
+    errors.append('Ammount to pay should be a float number') if params['to_pay'].nil?
+    return errors unless errors.empty?
+    errors.append('Ammount to pay should be > 0') if params['to_pay'] <= 0
+    errors.append('Ammount to pay should be <= remaining ammount') if params['to_pay'] > bill.remaining
     errors
   end
 end

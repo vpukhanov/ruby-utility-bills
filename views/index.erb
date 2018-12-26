@@ -1,0 +1,24 @@
+<h1>List of payers</h1>
+<table class="table table-hover container-offset">
+  <thead>
+    <tr>
+      <th scope="col">Full Name</th>
+      <th scope="col">Debt</th>
+      <th scope="col">Unpaid bills</th>
+      <th scope="col"><!-- Actions --></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payers.each do |payer| %>
+      <tr>
+        <td><%= payer.to_s %></td>
+        <% if payer.remaining_debt.zero? %>
+          <th>-</th>
+        <% else %>
+          <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
+        <% end %>
+        <td><%= payer.unpaid_bills.length %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

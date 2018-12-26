@@ -39,7 +39,8 @@ class PayerRegistry
   end
 
   def create_payer(payer_hash)
-    return false if has_payer(payer_hash)
+    return false if payer?(payer_hash)
+
     by_payer_hash(payer_hash)
   end
 
@@ -69,14 +70,14 @@ class PayerRegistry
 
   private
 
-  def has_payer(payer_hash)
+  def payer?(payer_hash)
     full_name = Payer.calculate_full_name(payer_hash)
     @collection.include?(full_name)
   end
 
   def by_payer_hash(payer_hash)
     full_name = Payer.calculate_full_name(payer_hash)
-    add(Payer.new(payer_hash)) unless has_payer(payer_hash)
+    add(Payer.new(payer_hash)) unless payer?(payer_hash)
     @collection[full_name]
   end
 end

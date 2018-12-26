@@ -10,6 +10,7 @@ helpers InputChecker
 
 configure do
   set :payers, PayerRegistry.create_from_file
+  set :uri_parser, URI::DEFAULT_PARSER
 end
 
 get '/' do
@@ -21,9 +22,8 @@ post '/' do
   @errors = validate_range(params)
   @from = params['from']
   @to = params['to']
-  unless @errors.empty?
-    return erb :index
-  end
+  return erb :index unless @errors.empty?
+
   @payers = settings.payers.in_debt_range(@from, @to).sort_by(&:to_s)
   erb :index
 end
@@ -50,15 +50,17 @@ end
 get '/bills/:full_name' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
-  @bills = @payer.bills.each_with_index.map do |bill, index|
-    { 'bill' => bill, 'original_index' => index }
-  end.sort_by { |row| -row['bill'].remaining }
+
+  @bills = @payer.bills.each_with_index
+                 .map { |bill, index| { 'bill' => bill, 'original_index' => index } }
+                 .sort_by { |row| -row['bill'].remaining }
   erb :bills
 end
 
 get '/bills/:full_name/new' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
+
   @bill_types = BillTypes::ALL
   erb :new_bill
 end
@@ -66,6 +68,7 @@ end
 post '/bills/:full_name/new' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
+
   @errors = validate_bill(params)
   unless @errors.empty?
     @bill_types = BillTypes::ALL
@@ -75,36 +78,42 @@ post '/bills/:full_name/new' do
     return erb :new_bill
   end
   @payer.add_bill(Bill.new(params))
-  redirect to('/bills/' + URI.escape(params['full_name']))
+  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
 end
 
 get '/bills/:full_name/:index/pay' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
+
   @bill = @payer.bills[to_integer(params['index'])]
-  return redirect to('/404') unless @bill and !@bill.remaining.zero?
+  return redirect to('/404') unless @bill && !@bill.remaining.zero?
+
   erb :pay_bill
 end
 
 post '/bills/:full_name/:index/pay' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
+
   @bill = @payer.bills[to_integer(params['index'])]
-  return redirect to('/404') unless @bill and !@bill.remaining.zero?
+  return redirect to('/404') unless @bill && !@bill.remaining.zero?
+
   @errors = validate_payment(params, @bill)
   unless @errors.empty?
     @to_pay = params['to_pay']
     return erb :pay_bill
   end
   @bill.add_ammount(@params['to_pay'])
-  redirect to('/bills/' + URI.escape(params['full_name']))
+  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
 end
 
 get '/bills/:full_name/:index/delete' do
   @payer = settings.payers.by_full_name(params['full_name'])
   return redirect to('/404') unless @payer
+
   @bill = @payer.bills[to_integer(params['index'])]
   return redirect to('/404') unless @bill
+
   @payer.delete_bill(@bill)
-  redirect to('/bills/' + URI.escape(params['full_name']))
+  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
 end

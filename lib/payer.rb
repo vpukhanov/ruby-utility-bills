@@ -6,6 +6,7 @@ class Payer
   def initialize(options)
     @last_name = options['last_name'].strip
     @first_name = options['first_name'].strip
+    @patronymic = ''
     @patronymic = options['patronymic'].strip if options['patronymic']
     @bills = []
   end

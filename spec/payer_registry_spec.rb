@@ -87,4 +87,30 @@ RSpec.describe PayerRegistry do
       expect(@registry.all).to include(payer)
     end
   end
+
+  context '#by_full_name' do
+    it 'should return payer with specified full name' do
+      payer = @registry.by_full_name('Ivanov Ivan Ivanovich')
+      expect(payer).to eq(@payer_one)
+    end
+
+    it 'should return nil if there is no payer with specified name' do
+      payer = @registry.by_full_name('Z Z Z')
+      expect(payer).to be_nil
+    end
+  end
+
+  context '#create_payer' do
+    it 'should create payer from specified payer hash' do
+      payer = @registry.create_payer(@payer_hash)
+      expect(payer).to be_a(Payer)
+      expect(@registry.all).to include(payer)
+    end
+
+    it 'should return false payer with specified hash is already in registry' do
+      @registry.create_payer(@payer_hash)
+      payer_two = @registry.create_payer(@payer_hash)
+      expect(payer_two).to be(false)
+    end
+  end
 end

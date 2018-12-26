@@ -13,7 +13,7 @@
       <tr>
         <td><%= payer.to_s %></td>
         <% if payer.remaining_debt.zero? %>
-          <th>-</th>
+          <th>&mdash;</th>
         <% else %>
           <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
         <% end %>

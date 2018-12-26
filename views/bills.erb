@@ -21,6 +21,10 @@
               <span class="oi oi-dollar" aria-hidden="true"></span>
             </a>
           <% end %>
+          <a class="btn btn-sm btn-danger"
+            href="/bills/<%= @payer.to_s %>/<%= row['original_index'] %>/delete">
+            <span class="oi oi-trash" aria-hidden="true"></span>
+          </a>
         </td>
       </tr>
     <% end %>

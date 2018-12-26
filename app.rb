@@ -17,6 +17,17 @@ get '/' do
   erb :index
 end
 
+post '/' do
+  @errors = validate_range(params)
+  @from = params['from']
+  @to = params['to']
+  unless @errors.empty?
+    return erb :index
+  end
+  @payers = settings.payers.in_debt_range(@from, @to).sort_by(&:to_s)
+  erb :index
+end
+
 get '/payers/new' do
   erb :new_payer
 end
@@ -86,5 +97,14 @@ post '/bills/:full_name/:index/pay' do
     return erb :pay_bill
   end
   @bill.add_ammount(@params['to_pay'])
+  redirect to('/bills/' + URI.escape(params['full_name']))
+end
+
+get '/bills/:full_name/:index/delete' do
+  @payer = settings.payers.by_full_name(params['full_name'])
+  return redirect to('/404') unless @payer
+  @bill = @payer.bills[to_integer(params['index'])]
+  return redirect to('/404') unless @bill
+  @payer.delete_bill(@bill)
   redirect to('/bills/' + URI.escape(params['full_name']))
 end

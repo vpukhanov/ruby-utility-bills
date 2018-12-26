@@ -1,33 +1,81 @@
 <h1>List of payers</h1>
-<table class="table table-hover container-offset">
-  <thead>
-    <tr>
-      <th scope="col">Full Name</th>
-      <th scope="col">Debt</th>
-      <th scope="col">Unpaid bills</th>
-      <th scope="col"><!-- Actions --></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @payers.each do |payer| %>
-      <tr>
-        <td><%= payer.to_s %></td>
-        <% if payer.remaining_debt.zero? %>
-          <th>&mdash;</th>
-        <% else %>
-          <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
+<div class="row container-offset">
+  <div class="col-lg-8">
+    <% if @payers && !@payers.empty? %>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Full Name</th>
+          <th scope="col">Debt</th>
+          <th scope="col">Unpaid bills</th>
+          <th scope="col"><!-- Actions --></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @payers.each do |payer| %>
+          <tr>
+            <td><%= payer.to_s %></td>
+            <% if payer.remaining_debt.zero? %>
+              <th>&mdash;</th>
+            <% else %>
+              <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
+            <% end %>
+            <td><%= payer.unpaid_bills.length %></td>
+            <td>
+              <a class="btn btn-sm btn-info" href="/bills/<%= payer.to_s %>"><span class="oi oi-eye" aria-hidden="true"></span></a>
+            </td>
+          </tr>
         <% end %>
-        <td><%= payer.unpaid_bills.length %></td>
-        <td>
-          <a class="btn btn-sm btn-info" href="/bills/<%= payer.to_s %>"><span class="oi oi-eye" aria-hidden="true"></span></a>
-        </td>
-      </tr>
+      </tbody>
+    </table>
+    <% else %>
+      <p>No payers found with specified filter</p>
     <% end %>
-  </tbody>
-</table>
-<div class="container-offset">
-  <a class="btn btn-primary" href="/payers/new">
-    <span class="oi oi-plus" aria-hidden="true"></span>
-    Add payer
-  </a>
+    <div class="container-offset">
+      <a class="btn btn-primary" href="/payers/new">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+        Add payer
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <% if @errors && !@errors.empty? %>
+      <div class="alert alert-danger container-offset" role="alert">
+        This form contains the following errors:
+        <ul>
+          <% @errors.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="card">
+      <div class="card-header">
+        Filter by debt range
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="form-group row">
+            <label for="low" class="col-sm-3">From</label>
+            <div class="input-group input-group-sm col-sm-9">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input type="text" class="form-control" id="from" name="from" placeholder="From" value="<%= @from || 0 %>" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="low" class="col-sm-3">To</label>
+            <div class="input-group input-group-sm col-sm-9">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input type="text" class="form-control" id="to" name="to" placeholder="To" value="<%= @to %>" required>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm btn-block" type="submit">Filter</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

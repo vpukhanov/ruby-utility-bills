@@ -3,5 +3,9 @@
 }
 
 .row-disabled {
-  color: LightGray;
+  opacity: 0.2;
+}
+
+.row-disabled:hover {
+  opacity: 0.6;
 }

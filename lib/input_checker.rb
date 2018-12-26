@@ -60,4 +60,15 @@ module InputChecker
     errors.append('Ammount to pay should be <= remaining ammount') if params['to_pay'] > bill.remaining
     errors
   end
+
+  def validate_range(params)
+    errors = []
+    params['from'] = to_float(params['from'])
+    params['to'] = to_float(params['to'])
+    errors.append('Lower bound should be a float number') if params['from'].nil?
+    errors.append('Upper bound should be a float number') if params['to'].nil?
+    return errors unless errors.empty?
+    errors.append('Upper bound should be >= that lower bound') if params['to'] < params['from']
+    errors
+  end
 end

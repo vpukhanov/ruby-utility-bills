@@ -1,6 +1,7 @@
 require 'payer_registry'
 require 'payer'
 require 'bill_types'
+require 'dao'
 
 RSpec.describe PayerRegistry do
   before do
@@ -14,6 +15,18 @@ RSpec.describe PayerRegistry do
 
     @registry.add(@payer_one)
     @registry.add(@payer_two)
+  end
+
+  context '::create_from_file' do
+    it 'should create registry from file' do
+      row = @payer_hash.merge(@bill_hash)
+      expect(DAO).to receive(:read_data).and_return([row])
+
+      registry = PayerRegistry.create_from_file
+      payer = registry.all[0]
+      expect(payer).to be_a(Payer)
+      expect(payer.total_debt).to eq(@bill_hash['total'])
+    end
   end
 
   context '#all' do

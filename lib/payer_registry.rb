@@ -1,5 +1,6 @@
 require_relative 'payer'
 require_relative 'bill'
+require_relative 'dao'
 
 # Registry class that acts as a data store for Payers and
 # holds logic for accessing/creating/filtering of Payer
@@ -7,6 +8,19 @@ require_relative 'bill'
 class PayerRegistry
   def initialize
     @collection = {}
+  end
+
+  def self.create_from_file
+    rows = DAO.read_data
+    rows.each_with_object(PayerRegistry.new) do |row, registry|
+      registry.create_bill(
+        {
+          'first_name' => row['first_name'], 'last_name' => row['last_name'],
+          'patronymic' => row['patronymic']
+        },
+        'bill_type' => row['bill_type'], 'total' => row['total'], 'paid' => row['paid']
+      )
+    end
   end
 
   def all

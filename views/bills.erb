@@ -1,0 +1,26 @@
+<h1>Bills of <%= @payer.to_s %></h1>
+<table class="table table-hover container-offset">
+  <thead>
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Remaining</th>
+      <th scope="col">Total amount</th>
+      <th scope="col"><!-- Actions --></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @bills.each do |bill| %>
+      <tr class="<%= 'row-disabled' if bill.remaining.zero? %>">
+        <td><%= bill.type %></td>
+        <td>$<%= bill.remaining %></td>
+        <td>$<%= bill.total %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="container-offset">
+  <a class="btn btn-primary" href="/bills/<%= @payer.to_s %>/new">
+    <span class="oi oi-plus" aria-hidden="true"></span>
+    Add bill
+  </a>
+</div>

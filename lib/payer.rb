@@ -4,9 +4,9 @@ class Payer
   attr_reader :bills, :last_name, :first_name, :patronymic
 
   def initialize(options)
-    @last_name = options['last_name']
-    @first_name = options['first_name']
-    @patronymic = options['patronymic']
+    @last_name = options['last_name'].strip
+    @first_name = options['first_name'].strip
+    @patronymic = options['patronymic'].strip if options['patronymic']
     @bills = []
   end
 
@@ -39,8 +39,8 @@ class Payer
   end
 
   def self.calculate_full_name(hash)
-    full_name = "#{hash['last_name']} #{hash['first_name']}"
-    full_name += " #{hash['patronymic']}" if hash['patronymic'] && !hash['patronymic'].empty?
+    full_name = "#{hash['last_name'].strip} #{hash['first_name'].strip}"
+    full_name += " #{hash['patronymic'].strip}" if hash['patronymic'] && !hash['patronymic'].empty?
     full_name
   end
 end

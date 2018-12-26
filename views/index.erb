@@ -18,6 +18,9 @@
           <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
         <% end %>
         <td><%= payer.unpaid_bills.length %></td>
+        <td>
+          <a class="btn btn-sm btn-info" href="/bills/<%= payer.to_s %>"><span class="oi oi-eye" aria-hidden="true"></span></a>
+        </td>
       </tr>
     <% end %>
   </tbody>

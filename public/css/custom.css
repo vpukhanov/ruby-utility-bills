@@ -1,3 +1,7 @@
 .container-offset {
   margin-top: 20px;
 }
+
+.row-disabled {
+  color: LightGray;
+}

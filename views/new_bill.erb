@@ -1,0 +1,40 @@
+<h1>New bill for <%= @payer.to_s %></h1>
+<% if @errors && !@errors.empty? %>
+  <div class="alert alert-danger container-offset" role="alert">
+    This form contains the following errors:
+    <ul>
+      <% @errors.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<form method="POST">
+  <div class="form-group">
+    <label for="bill_type">Bill type</label>
+    <select class="form-control" id="bill_type" name="bill_type">
+      <% @bill_types.each do |type| %>
+        <option <%= 'selected' if type == @bill_type %>><%= type %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="total">Total ammount to pay</label>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text">$</div>
+      </div>
+      <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="<%= @total || 100 %>" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="paid">Ammount already paid</label>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text">$</div>
+      </div>
+      <input type="text" class="form-control" id="paid" name="paid" placeholder="Paid" value="<%= @paid || 0 %>" required>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>

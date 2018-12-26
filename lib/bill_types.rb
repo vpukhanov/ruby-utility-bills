@@ -6,6 +6,8 @@ module BillTypes
   ELECTRICITY = :electricity
   PHONE = :phone
 
+  ALL = [RENT, ELECTRICITY, PHONE]
+
   def self.from_string(str)
     case str.downcase
     when 'rent'

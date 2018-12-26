@@ -34,13 +34,17 @@ class PayerRegistry
     end
   end
 
+  def by_full_name(full_name)
+    @collection[full_name]
+  end
+
   def create_payer(payer_hash)
     return false if has_payer(payer_hash)
     by_payer_hash(payer_hash)
-    true
   end
 
-  def create_bill(payer, bill_hash)
+  def create_bill(payer_hash, bill_hash)
+    payer = by_payer_hash(payer_hash)
     payer.add_bill(Bill.new(bill_hash))
   end
 

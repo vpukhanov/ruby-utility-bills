@@ -116,3 +116,7 @@ get '/bills/:full_name/:index/delete' do
   @payer.delete_bill(@bill)
   redirect to('/bills/' + escape(params['full_name']))
 end
+
+get '/404' do
+  erb :not_found
+end

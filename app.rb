@@ -1,5 +1,5 @@
 require 'sinatra'
-#require 'sinatra/reloader' if development?
+require 'sinatra/reloader' if development?
 
 require_relative 'lib/payer_registry'
 require_relative 'lib/input_checker'

@@ -12,15 +12,15 @@ module DAO
   end
 
   def self.read_data
-    if File.exist?(self.data_path)
-      CSV.readlines(self.data_path, headers: true)
+    if File.exist?(data_path)
+      CSV.readlines(data_path, headers: true)
     else
       []
     end
   end
 
   def self.write_data(rows)
-    CSV.open(self.data_path, 'w') do |csv|
+    CSV.open(data_path, 'w') do |csv|
       rows.each do |row|
         csv << row
       end

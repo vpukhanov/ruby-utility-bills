@@ -2,7 +2,7 @@ RSpec.describe 'payers creation', type: :feature do
   it 'should allow payer creation' do
     visit('/')
     click_on('Add payer')
-    
+
     fill_in('First name', with: 'Manual')
     fill_in('Last name', with: 'Testing')
     fill_in('Patronymic', with: 'Initiative')
@@ -14,7 +14,7 @@ RSpec.describe 'payers creation', type: :feature do
   it 'should allow empty patronymic' do
     visit('/')
     click_on('Add payer')
-    
+
     fill_in('First name', with: 'Manual')
     fill_in('Last name', with: 'Testing')
     click_on('Create')
@@ -25,7 +25,7 @@ RSpec.describe 'payers creation', type: :feature do
   it 'should not allow empty first and last names' do
     visit('/')
     click_on('Add payer')
-    
+
     fill_in('Patronymic', with: 'Only')
     click_on('Create')
 
@@ -36,7 +36,7 @@ RSpec.describe 'payers creation', type: :feature do
   it 'should not allow blank first and last names' do
     visit('/')
     click_on('Add payer')
-    
+
     fill_in('First name', with: '   ')
     fill_in('Last name', with: '   ')
     fill_in('Patronymic', with: 'Only')

@@ -7,6 +7,10 @@ module InputChecker
     str.strip.empty?
   end
 
+  def escape(uri_part)
+    URI::DEFAULT_PARSER.escape(uri_part)
+  end
+
   def to_float(str)
     Float(str)
   rescue ArgumentError, TypeError

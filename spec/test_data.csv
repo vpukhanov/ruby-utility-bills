@@ -1,0 +1,6 @@
+last_name,first_name,patronymic,bill_type,total,paid
+Test,One,,electricity,500,250
+Test,One,,phone,500,500
+Test,One,,rent,1000,0
+Test,Two,Patric,phone,100,100
+Z,Z,,rent,100,50

@@ -1,44 +1,51 @@
 <h1>Bills of <%= @payer.to_s %></h1>
-<table class="table table-hover container-offset">
-  <thead>
-    <tr>
-      <th scope="col">Type</th>
-      <th scope="col">Remaining</th>
-      <th scope="col">Total amount</th>
-      <th scope="col"><!-- Actions --></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @bills.each do |row| %>
-      <tr class="<%= 'row-disabled' if row['bill'].remaining.zero? %>">
-        <td><%= row['bill'].type %></td>
-        <td>$<%= row['bill'].remaining %></td>
-        <td>$<%= row['bill'].total %></td>
-        <td>
-          <% unless row['bill'].remaining.zero? %>
-            <a class="btn btn-sm btn-warning"
-              href="/bills/<%= @payer.to_s %>/<%= row['original_index'] %>/pay">
-              <span class="oi oi-dollar" aria-hidden="true"></span>
-            </a>
-          <% end %>
-          <a class="btn btn-sm btn-danger"
-            href="/bills/<%= @payer.to_s %>/<%= row['original_index'] %>/delete">
-            <span class="oi oi-trash" aria-hidden="true"></span>
-          </a>
-        </td>
+<% if @bills && !@bills.empty? %>
+  <table class="table table-hover container-offset">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+        <th scope="col">Remaining</th>
+        <th scope="col">Total amount</th>
+        <th scope="col"><!-- Actions --></th>
       </tr>
-    <% end %>
-  </tbody>
-    <tr>
-      <th class="text-right">Total</th>
-      <th>$<%= @payer.remaining_debt %></th>
-      <th>$<%= @payer.total_debt %></th>
-    </tr>
-  <tfoot>
-  </tfoot>
-</table>
+    </thead>
+    <tbody>
+      <% @bills.each do |row| %>
+        <tr class="<%= 'row-disabled' if row['bill'].remaining.zero? %>">
+          <td><%= row['bill'].type %></td>
+          <td>$<%= row['bill'].remaining %></td>
+          <td>$<%= row['bill'].total %></td>
+          <td>
+            <% unless row['bill'].remaining.zero? %>
+              <a
+                class="btn btn-sm btn-warning"
+                id="pay-bill-<%= row['original_index'] %>"
+                href="/bills/<%= escape(@payer.to_s) %>/<%= row['original_index'] %>/pay">
+                <span class="oi oi-dollar" aria-hidden="true"></span>
+              </a>
+            <% end %>
+            <a class="btn btn-sm btn-danger"
+              id="delete-bill-<%= row['original_index'] %>"
+              href="/bills/<%= escape(@payer.to_s) %>/<%= row['original_index'] %>/delete">
+              <span class="oi oi-trash" aria-hidden="true"></span>
+            </a>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th class="text-right">Total</th>
+        <th id="remaining-debt">$<%= @payer.remaining_debt %></th>
+        <th id="complete-debt">$<%= @payer.total_debt %></th>
+      </tr>
+    </tfoot>
+  </table>
+<% else %>
+  <p class="container-offset">No bills for this payer are registered</p>
+<% end %>
 <div class="container-offset">
-  <a class="btn btn-primary" href="/bills/<%= @payer.to_s %>/new">
+  <a class="btn btn-primary" href="/bills/<%= escape(@payer.to_s) %>/new">
     <span class="oi oi-plus" aria-hidden="true"></span>
     Add bill
   </a>

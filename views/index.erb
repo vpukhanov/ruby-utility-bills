@@ -2,32 +2,37 @@
 <div class="row container-offset">
   <div class="col-lg-8">
     <% if @payers && !@payers.empty? %>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Full Name</th>
-          <th scope="col">Debt</th>
-          <th scope="col">Unpaid bills</th>
-          <th scope="col"><!-- Actions --></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @payers.each do |payer| %>
+      <table class="table table-hover">
+        <thead>
           <tr>
-            <td><%= payer.to_s %></td>
-            <% if payer.remaining_debt.zero? %>
-              <th>&mdash;</th>
-            <% else %>
-              <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
-            <% end %>
-            <td><%= payer.unpaid_bills.length %></td>
-            <td>
-              <a class="btn btn-sm btn-info" href="/bills/<%= payer.to_s %>"><span class="oi oi-eye" aria-hidden="true"></span></a>
-            </td>
+            <th scope="col">Full Name</th>
+            <th scope="col">Debt</th>
+            <th scope="col">Unpaid bills</th>
+            <th scope="col"><!-- Actions --></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @payers.each_with_index do |payer, index| %>
+            <tr>
+              <td><%= payer.to_s %></td>
+              <% if payer.remaining_debt.zero? %>
+                <th>&mdash;</th>
+              <% else %>
+                <td>$<%= payer.remaining_debt %> of $<%= payer.total_debt %></td>
+              <% end %>
+              <td><%= payer.unpaid_bills.length %></td>
+              <td>
+                <a
+                  class="btn btn-sm btn-info" 
+                  id="view-bills-<%= index %>"
+                  href="/bills/<%= escape(payer.to_s) %>">
+                  <span class="oi oi-eye" aria-hidden="true"></span>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% else %>
       <p>No payers found with specified filter</p>
     <% end %>

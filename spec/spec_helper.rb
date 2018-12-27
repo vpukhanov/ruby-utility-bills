@@ -1,3 +1,4 @@
+require 'capybara/rspec'
 require 'simplecov'
 SimpleCov.start do
   add_filter '/spec/'
@@ -98,4 +99,14 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+
+  config.before(:example, type: :feature) do
+    ENV['RACK_ENV'] = 'test'
+    require_relative '../app'
+    Capybara.app = Sinatra::Application.new
+  end
+
+  config.after(:each, type: :feature) do
+    Capybara.app.settings.set :payers, PayerRegistry.create_from_file
+  end
 end

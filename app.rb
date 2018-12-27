@@ -1,5 +1,5 @@
 require 'sinatra'
-require 'sinatra/reloader' if development?
+#require 'sinatra/reloader' if development?
 
 require_relative 'lib/payer_registry'
 require_relative 'lib/input_checker'
@@ -10,7 +10,6 @@ helpers InputChecker
 
 configure do
   set :payers, PayerRegistry.create_from_file
-  set :uri_parser, URI::DEFAULT_PARSER
 end
 
 get '/' do
@@ -78,7 +77,7 @@ post '/bills/:full_name/new' do
     return erb :new_bill
   end
   @payer.add_bill(Bill.new(params))
-  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
+  redirect to('/bills/' + escape(params['full_name']))
 end
 
 get '/bills/:full_name/:index/pay' do
@@ -104,7 +103,7 @@ post '/bills/:full_name/:index/pay' do
     return erb :pay_bill
   end
   @bill.add_ammount(@params['to_pay'])
-  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
+  redirect to('/bills/' + escape(params['full_name']))
 end
 
 get '/bills/:full_name/:index/delete' do
@@ -115,5 +114,5 @@ get '/bills/:full_name/:index/delete' do
   return redirect to('/404') unless @bill
 
   @payer.delete_bill(@bill)
-  redirect to('/bills/' + settings.uri_parser.escape(params['full_name']))
+  redirect to('/bills/' + escape(params['full_name']))
 end
